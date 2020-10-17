@@ -67,5 +67,9 @@ module Simpler
       { format: tmp_arr[0], template: tmp_arr[1] }
     end
 
+    def status(code)
+      @response.status = code
+    end
+
   end
 end

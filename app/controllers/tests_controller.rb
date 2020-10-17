@@ -5,6 +5,7 @@ class TestsController < Simpler::Controller
     # @time = Time.now
 
     render json: 'tests/list'
+    status 302
   end
 
   def create
