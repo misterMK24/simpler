@@ -1,7 +1,10 @@
 class TestsController < Simpler::Controller
 
   def index
-    @time = Time.now
+    # render 'tests/list'
+    # @time = Time.now
+
+    render json: 'tests/list'
   end
 
   def create
