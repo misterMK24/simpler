@@ -8,6 +8,8 @@ module Simpler
     RENDERING_TEMPLATES = [:html, :plain, :json].freeze
 
     attr_reader :name, :request, :response
+    # attr_accessor :response
+    alias :headers :response 
 
     def initialize(env)
       @name = extract_name
