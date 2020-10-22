@@ -33,6 +33,7 @@ module Simpler
       else
         controller = route.controller.new(env)
         action = route.action
+        env['simpler.param'] = route.param if route.param
         make_response(controller, action)
       end
     end

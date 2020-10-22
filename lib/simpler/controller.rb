@@ -20,11 +20,10 @@ module Simpler
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-
+      update_params 
       set_default_headers
       send(action)
       write_response
-
       @response.finish
     end
 
@@ -71,6 +70,12 @@ module Simpler
 
     def status(code)
       @response.status = code
+    end
+
+    def update_params
+      return nil unless @request.env['simpler.param']
+
+      @request.env['simpler.param'].each { |k, v| @request.update_param(k, v) }
     end
 
   end
