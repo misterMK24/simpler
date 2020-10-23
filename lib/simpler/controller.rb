@@ -1,9 +1,15 @@
+require 'byebug'
 require_relative 'view'
+
 
 module Simpler
   class Controller
 
+    RENDERING_TEMPLATES = [:html, :plain, :json].freeze
+
     attr_reader :name, :request, :response
+    # attr_accessor :response
+    alias :headers :response 
 
     def initialize(env)
       @name = extract_name
@@ -14,11 +20,10 @@ module Simpler
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-
+      update_params 
       set_default_headers
       send(action)
       write_response
-
       @response.finish
     end
 
@@ -39,6 +44,8 @@ module Simpler
     end
 
     def render_body
+      return @request.env['simpler.template'] if @request.env['simpler.format'] == :plain
+
       View.new(@request.env).render(binding)
     end
 
@@ -47,7 +54,28 @@ module Simpler
     end
 
     def render(template)
-      @request.env['simpler.template'] = template
+      params = process_template(template)
+      return nil unless params
+
+      @request.env['simpler.format'] = params[:format]
+      @request.env['simpler.template'] = params[:template]
+    end
+
+    def process_template(template)
+      tmp_arr = template.flatten
+      return nil unless RENDERING_TEMPLATES.any?(tmp_arr[0])
+
+      { format: tmp_arr[0], template: tmp_arr[1] }
+    end
+
+    def status(code)
+      @response.status = code
+    end
+
+    def update_params
+      return nil unless @request.env['simpler.param']
+
+      @request.env['simpler.param'].each { |k, v| @request.update_param(k, v) }
     end
 
   end
