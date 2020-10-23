@@ -11,8 +11,6 @@ module Simpler
 
     def render(binding)
       template = File.read(template_path)
-
-      # TODO: change rendering depending on format
       ERB.new(template).result(binding)
     end
 
@@ -40,7 +38,9 @@ module Simpler
     def template_path
       path = template || [controller.name, action].join('/')
       format = custom_format || "html.erb"
-      Simpler.root.join(VIEW_BASE_PATH, "#{path}.#{format}")
+      render_template = "#{path}.#{format}"
+      @env['simpler.render_template'] = render_template
+      Simpler.root.join(VIEW_BASE_PATH, render_template)
     end
 
   end

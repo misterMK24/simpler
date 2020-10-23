@@ -1,5 +1,5 @@
 Simpler.application.routes do
   get '/tests', 'tests#index'
-  get '/tests/:some_param', 'tests#show'
+  get '/tests/:id', 'tests#show'
   post '/tests', 'tests#create'
 end
